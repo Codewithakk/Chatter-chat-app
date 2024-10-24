@@ -91,9 +91,16 @@ NOTE!!! if you want to use the given website please wait for 1 minute after logg
     
 3. Create a .env file in the backend folder and add necessary environment variables:
     ```
-    PORT=5000
-    MONGODB_URI=your_mongodb_uri
-    SECRET_KEY=your_secret_key
+PORT=5000
+MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_secret_key
+EMAIL=your_email@example.com
+PASSWORD=your_email_password
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+GENERATIVE_API_KEY=your_generative_api_key
+
     ```
 
 ## Usage
