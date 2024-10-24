@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
 // Define the IP address for the server
-// const ipadd = "https://localhost:5000";  //production level
-const ipadd = "http://localhost:5000";   //localhost level
+const ipadd = "https://chatter-chat-app-1.onrender.com";  //production level
+// const ipadd = "http://localhost:5000";   //localhost level
 
 
 // Create a socket connection using Socket.IO
