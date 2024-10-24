@@ -11,7 +11,7 @@ const app = express();
 dotenv.config({ path: "./.env" });
 
 // CORS configuration
-const allowedOrigins = ['https://chatters-chat-app.netlify.app']; // Add your allowed origin here
+const allowedOrigins = ['https://chatters-chat-app.netlify.app', 'http://localhost:3000']; // Add your allowed origin here
 app.use(cors({
   origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the methods you want to allow
