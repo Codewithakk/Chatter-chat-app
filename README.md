@@ -1,6 +1,3 @@
-Your updated README looks great with clear instructions and detailed features! Here's a refined version of your README for better clarity and presentation:
-
----
 
 # Chatter - MERN Chat Application
 
