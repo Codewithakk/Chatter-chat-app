@@ -1,0 +1,126 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* home css */
+
+/* Page fade-in animation */
+.page-transition {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Title animation */
+.title-animation {
+  animation: scaleUp 1s ease-in-out;
+}
+
+@keyframes scaleUp {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Button hover effect with gradient */
+.btn-hover {
+  background-image: linear-gradient(45deg, #6a5acd, #836eff);
+  color: white;
+  transition: transform 0.3s ease, background 0.4s ease;
+}
+
+.btn-hover:hover {
+  transform: scale(1.05);
+  background-image: linear-gradient(45deg, #836eff, #6a5acd);
+}
+
+.btn-signup {
+  background-color: #7d00ff;
+}
+
+.btn-signup:hover {
+  background-color: #5a00d4;
+}
+
+/* Modal animation */
+.modal-animation {
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(-50px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Footer hover effect */
+.footer-hover:hover {
+  text-decoration: underline;
+  color: #9b5eff;
+}
+
+
+/* navbar */
+
+/* Button hover and transition effects */
+.btn-toggle,
+.btn-github {
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.btn-toggle:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-github {
+  background-image: linear-gradient(45deg, #6a5acd, #836eff);
+}
+
+.btn-github:hover {
+  transform: scale(1.1);
+  background-image: linear-gradient(45deg, #836eff, #6a5acd);
+}
+
+/* Navbar for larger screens */
+.navbar-large {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.navbar-large:hover {
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Navbar for small screens */
+.navbar-small {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar-small {
+    width: 80vw;
+  }
+}
+
+
+/* login  */
+
