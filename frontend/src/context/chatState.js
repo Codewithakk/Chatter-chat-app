@@ -32,7 +32,7 @@ const ChatState = (props) => {
   // Function to fetch user data from the server
   const fetchData = async () => {
     try {
-      const response = await fetch(`${ipadd}/conversation/`, {
+      const response = await fetch(`${ipadd}/conversation`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
