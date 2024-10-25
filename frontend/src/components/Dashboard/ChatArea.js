@@ -68,6 +68,8 @@ export const ChatArea = () => {
   const [showDelete, setshowDelete] = useState(false);
   const [selectedMessage, setselectedMessage] = useState("");
   const [typing, settyping] = useState(false);
+  const toast = useToast();
+  const [isBlocked, setIsBlocked] = useState(false); 
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -96,6 +98,86 @@ export const ChatArea = () => {
       });
     };
   });
+
+  useEffect(() => {
+    // Check if the user is blocked by fetching the data from the backend on component load
+    checkIfBlocked();
+  }, [context.activeChat]);
+
+  const checkIfBlocked = async () => {
+    const response = await fetch(`${context.ipadd}/user/blocked/${context.receiver._id}`, {
+      method: "GET",
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    });
+    const data = await response.json();
+    setIsBlocked(data.isBlocked);
+  };
+
+  const handleBlockUser = async () => {
+    try {
+      const response = await fetch(`${context.ipadd}/user/block/${context.receiver._id}`, {
+        method: "POST",
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+      if (response.ok) {
+        setIsBlocked(true);
+        toast({
+          title: "User blocked successfully.",
+          status: "success",
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Failed to block user.",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Server error.",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleUnblockUser = async () => {
+    try {
+      const response = await fetch(`${context.ipadd}/user/unblock/${context.receiver._id}`, {
+        method: "POST",
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+      if (response.ok) {
+        setIsBlocked(false);
+        toast({
+          title: "User unblocked successfully.",
+          status: "success",
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Failed to unblock user.",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Server error.",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
 
   useEffect(() => {
     context.socket.on("user-joined-room", async (userid) => {
@@ -146,7 +228,6 @@ export const ChatArea = () => {
     };
   });
 
-  const toast = useToast();
 
   const handleTyping = (e) => {
     if (document.getElementById("new-message").value === "" && typing) {
@@ -250,18 +331,18 @@ export const ChatArea = () => {
 
     context.setmychatList(
       await context.mychatList
-        .map((chat) => {
-          if (chat._id === context.activeChat) {
-            chat.latestmessage = messageText;
-            chat.updatedAt = new Date().toUTCString();
-            console.log(chat);
-          }
-          return chat;
-        })
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      .map((chat) => {
+        if (chat._id === context.activeChat) {
+          chat.latestmessage = messageText;
+          chat.updatedAt = new Date().toUTCString();
+          console.log(chat);
+        }
+        return chat;
+      })
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     );
   };
-
+  
   const handleDeleteMessage = async (deletefrom) => {
     var messagelist = context.messageList.filter(
       (message) => message._id !== selectedMessage
@@ -269,20 +350,20 @@ export const ChatArea = () => {
     context.setmessageList(messagelist);
     setshowDelete(false);
     onclosedelete();
-
+    
     const userids = [];
     userids.push(context.user._id);
     if (deletefrom == 2) {
       userids.push(context.receiver._id);
     }
-
+    
     const data = {
       messageid: selectedMessage,
       userids,
     };
-
+    
     console.log(data);
-
+    
     fetch(`${context.ipadd}/message/delete`, {
       method: "POST",
       headers: {
@@ -292,24 +373,35 @@ export const ChatArea = () => {
       body: JSON.stringify(data),
     });
   };
-
+  
   return (
     <>
       {context.activeChat !== "" ? (
         <>
           <Box
-            // display={"flex"}
-            // flexDir="column"
-            justifyContent="space-between"
-            h={"100%"}
-            w={{
-              base: "100vw",
-              md: "100%",
-            }}
+          
+          // display={"flex"}
+          // flexDir="column"
+          justifyContent="space-between"
+          h={"100%"}
+          w={{
+            base: "100vw",
+            md: "100%",
+          }}
           >
+            {/* Block/Unblock Button */}
+          {isBlocked ? (
+          <Button colorScheme="green" onClick={handleUnblockUser}>
+          Unblock User
+          </Button>
+          ) : (
+          <Button colorScheme="red" onClick={handleBlockUser}>
+          Block User
+          </Button>
+          )}
+            
             <ChatAreaTop />
             {context.ischatLoading && <ChatLoadingSpinner />}
-
             <DeleteMessageModal
               isOpen={isopendelete}
               handleDeleteMessage={handleDeleteMessage}
@@ -325,6 +417,7 @@ export const ChatArea = () => {
               mt={1}
               mx={1}
             >
+              
               {messages?.map(
                 (message) =>
                   !message.deletedby?.includes(context.user._id) && (
@@ -379,7 +472,7 @@ export const ChatArea = () => {
                             </Tooltip>
                           </Box>
                         )}
-
+                         
                         {message.sender !== context.user._id && (
                           <Image
                             borderRadius={"50%"}
@@ -391,6 +484,7 @@ export const ChatArea = () => {
                             alignSelf={"center"}
                           />
                         )}
+                        
                         <Stack spacing={0}>
                           {message.replyto && (
                             <Box
@@ -434,6 +528,7 @@ export const ChatArea = () => {
                             w={"max-content"}
                             maxW={"60vw"}
                           >
+                            
                             {message.imageurl && (
                               <Image
                                 src={message.imageurl}
@@ -552,14 +647,14 @@ export const ChatArea = () => {
                       </Button>
                     </InputLeftElement>
                   )}
-
-                  <Input
+ 
+           <Input
                     placeholder="Type a message"
                     id={"new-message"}
                     onChange={(e) => handleTyping(e)}
                     borderRadius={"10px"}
                   />
-
+                
                   <InputRightElement>
                     <Button
                       onClick={(e) =>
@@ -599,7 +694,7 @@ export const ChatArea = () => {
             textAlign={"center"}
           >
             <Text fontSize={"6vw"} fontWeight={"bold"} fontFamily={"Work sans"}>
-            Chatterbox
+              Chatterbox
             </Text>
             <Text fontSize={"2vw"}>Online chatting app</Text>
             <Text fontSize={"md"}>Select a chat to start messaging</Text>

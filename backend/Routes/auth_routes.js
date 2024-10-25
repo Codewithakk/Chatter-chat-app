@@ -9,6 +9,7 @@ const {
   authUser,
   updateprofile,
   sendotp,
+  blockUser, unblockUser, checkIfBlocked
 } = require("../Controllers/auth_controller.js");
 
 const upload = multer();
@@ -19,4 +20,7 @@ router.get("/login", authUser);
 router.get("/", fetchuser, allUser);
 router.put("/update", fetchuser, updateprofile);
 router.post("/getotp", sendotp);
+router.post("/block/:userId", fetchuser, blockUser);
+router.post("/unblock/:userId", fetchuser, unblockUser);
+router.get("/blocked/:userId", fetchuser, checkIfBlocked);
 module.exports = router;

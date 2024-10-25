@@ -259,37 +259,90 @@ const sendotp = async (req, res) => {
     }, 300000);
 
     let mailDetails = {
-      from: process.env.EMAIL,
+      from: `${process.env.COMPANY_NAME} <${process.env.EMAIL_USERNAME}>`,
       to: email,
-      subject: "Login with your Otp",
-
+      subject: "Login with your OTP - Chatter Chat App",
+      
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
-          <title>Otp for Login</title>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Chatter
+           OTP for Login</title>
           <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f0f2f5;
+                  color: #333;
+                  margin: 0;
+                  padding: 0;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+              }
               .container {
-                  width: 50%;
+                  max-width: 500px;
+                  width: 90%;
                   margin: 0 auto;
-                  background: #f4f4f4;
+                  background-color: #ffffff;
+                  border-radius: 10px;
+                  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+                  overflow: hidden;
+                  text-align: center;
                   padding: 20px;
+                  animation: fadeIn 1.5s ease;
               }
               h1 {
-                  text-align: center;
+                  color: #4a90e2;
+                  font-size: 24px;
+                  margin-bottom: 10px;
+                  animation: slideIn 1.2s ease forwards;
               }
-    
-          </style> 
+              h2 {
+                  font-size: 20px;
+                  color: #333;
+                  animation: slideIn 1.2s ease forwards;
+              }
+              p {
+                  font-size: 16px;
+                  color: #555;
+                  margin: 15px 0;
+              }
+              .otp {
+                  font-size: 24px;
+                  font-weight: bold;
+                  color: #4a90e2;
+                  letter-spacing: 2px;
+                  animation: pulse 1.5s infinite;
+              }
+              @keyframes fadeIn {
+                  from { opacity: 0; }
+                  to { opacity: 1; }
+              }
+              @keyframes slideIn {
+                  from { transform: translateY(-10px); opacity: 0; }
+                  to { transform: translateY(0); opacity: 1; }
+              }
+              @keyframes pulse {
+                  0%, 100% { opacity: 1; }
+                  50% { opacity: 0.5; }
+              }
+          </style>
       </head>
       <body>
-              <strong><h1>Conversa - online chatting app</h1></strong>
           <div class="container">
-              <h2>Your Otp is</h2>
-              <strong><p>${otp}</p><strong>
-              <p>Use this Otp to login</p>
+              <h1>Welcome to Chatter!</h1>
+              <h2>Your OTP is</h2>
+              <p class="otp">${otp}</p>
+              <p>Use this OTP to securely login and start chatting with friends and colleagues in real time!</p>
+              <p>If you didn't request this OTP, feel free to ignore this message.</p>
           </div>
       </body>
-      </html>`,
+      </html>`
     };
+    
 
     await mailTransporter.sendMail(mailDetails, function (err, data) {
       if (err) {
@@ -306,6 +359,66 @@ const sendotp = async (req, res) => {
   }
 };
 
+
+// Block a user
+const blockUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // ID of the user who wants to block someone
+    const blockedUserId = req.params.userId; // ID of the user to block
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    // Add the user to the blockedUsers array if not already blocked
+    if (!user.blockedUsers.includes(blockedUserId)) {
+      user.blockedUsers.push(blockedUserId);
+      await user.save();
+    }
+
+    res.status(200).json({ message: "User blocked successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+// Unblock a user
+const unblockUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const blockedUserId = req.params.userId;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    // Remove the user from the blockedUsers array if present
+    user.blockedUsers = user.blockedUsers.filter(id => id.toString() !== blockedUserId);
+    await user.save();
+
+    res.status(200).json({ message: "User unblocked successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+// Check if a user is blocked
+const checkIfBlocked = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const checkUserId = req.params.userId;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    const isBlocked = user.blockedUsers.includes(checkUserId);
+    res.status(200).json({ isBlocked });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -313,4 +426,5 @@ module.exports = {
   authUser,
   updateprofile,
   sendotp,
+  blockUser, unblockUser, checkIfBlocked
 };

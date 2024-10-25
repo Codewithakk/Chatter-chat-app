@@ -7,6 +7,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+/* ChatInput.css */
+.chat-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.chat-input-form {
+  display: flex;
+  align-items: center;
+}
+
+.emoji-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.emoji-picker {
+  position: absolute;
+  bottom: 60px; /* Adjust as needed */
+  left: 0;
+  z-index: 1000;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-right: 10px;
+}
+
+.send-button {
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
