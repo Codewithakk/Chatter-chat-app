@@ -259,7 +259,7 @@ const sendotp = async (req, res) => {
     }, 300000);
 
     let mailDetails = {
-      from: `${process.env.COMPANY_NAME} <${process.env.EMAIL_USERNAME}>`,
+      from: `'akshay.singh.as.2002@gmail.com' <${process.env.EMAIL_USERNAME}>`,
       to: email,
       subject: "Login with your OTP - Chatter Chat App",
       

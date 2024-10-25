@@ -5,7 +5,7 @@ const imageupload = require("../config/imageupload.js");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 
-const configuration = new GoogleGenerativeAI(process.env.GENERATIVE_API_KEY);
+const configuration = new GoogleGenerativeAI('AIzaSyDzyCjcl9CzYIGM07XgleZkogggS0u-qys');
 const modelId = "gemini-pro";
 const model = configuration.getGenerativeModel({ model: modelId });
 
